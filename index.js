@@ -14,27 +14,27 @@ connect.then((db)=>{
 	console.log('Connected correctly to server');
 
 	//adding a new document(creating a new dish)
-	var newDish = Dishes({
+	//this will create and then save
+	Dishes.create({
         name: 'Uthappizza',
         description: 'test'
     });
 
-	//saving (dish) to the database
-    newDish.save()
-        .then((dish) => {
-            console.log(dish);
+    
+    .then((dish) => {
+        console.log(dish);
 
-            return Dishes.find({}).exec();	//returning all the dishes in the database
-        })//if the data is coming from the database then store it in the dishes
-        .then((dishes) => {
-            console.log(dishes);
+        return Dishes.find({}).exec();	//returning all the dishes in the database
+    })//if the data is coming from the database then store it in the dishes
+    .then((dishes) => {
+        console.log(dishes);
 
-            return db.collection('dishes').drop();
-        })
-        .then(() => {
-            return db.close();
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        return db.collection('dishes').drop();
+    })
+    .then(() => {
+        return db.close();
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 });
