@@ -16,20 +16,36 @@ connect.then((db)=>{
 	//adding a new document(creating a new dish)
 	//this will create and then save
 	Dishes.create({
-        name: 'Uthappizza',
+        name: 'Uthappizza1',
         description: 'test'
-    });
+    })
 
     
-    .then((dish) => {
+    .then((dish) => {	//think like, you have created the dish and now if everything goes perfect
+    	//its going to be saved in the dish
         console.log(dish);
 
-        return Dishes.find({}).exec();	//returning all the dishes in the database
-    })//if the data is coming from the database then store it in the dishes
-    .then((dishes) => {
-        console.log(dishes);
+        return Dishes.findByIdAndUpdate(dish._id, {	//this dish._id is of the same dish that we just inserted
+        	$set: { description: 'Updated test'},
+        },{	
+        	new : true  //used because once the dish is updated, it will return the updated dish to us
+        })
+        .exec();	//returning a particular dish from the database
+    })//if the data is coming from the database then store it in the dish
+    .then((dish) => {
+        console.log(dish);
+        dish.comments.push({
+            rating: 5,
+            comment: 'I\'m getting a sinking feeling!',
+            author: 'Leonardo di Carpaccio'
+        });	//comment is the field inside the dish
 
+        return dish.save();
+    })
+    .then((dish) => {
+    	console.log(dish);
         return db.collection('dishes').drop();
+    
     })
     .then(() => {
         return db.close();
